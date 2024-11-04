@@ -15,6 +15,7 @@ defmodule Darreck.Application do
       # Start the Finch HTTP client for sending emails
       {Finch, name: Darreck.Finch},
       Tiapi.Channel,
+      DarreckTgBot.Supervisor,
       # Start to serve requests, typically the last entry
       DarreckWeb.Endpoint
     ]

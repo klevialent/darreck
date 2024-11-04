@@ -84,4 +84,10 @@ config :phoenix_live_view,
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
 
+config :darreck, tg_bot_work_mode: :polling
+
+config :telegex,
+  hook_adapter: Bandit,
+  caller_adapter: {Finch, [receive_timeout: 15 * 1000]}
+
 import_config "secret/dev.exs"
