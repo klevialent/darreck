@@ -14,8 +14,7 @@ defmodule Darreck.Application do
       {Phoenix.PubSub, name: Darreck.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Darreck.Finch},
-      # Start a worker by calling: Darreck.Worker.start_link(arg)
-      # {Darreck.Worker, arg},
+      Tiapi.Channel,
       # Start to serve requests, typically the last entry
       DarreckWeb.Endpoint
     ]
