@@ -61,6 +61,7 @@ defmodule Darreck.MixProject do
       {:bandit, "~> 1.5"},
       {:telegex, "~> 1.9-rc.0"},
       {:number, "~> 1.0.1"},
+      {:quantum, "~> 3.5"},
       {:recompile_dep, "~> 0.1.0", only: :dev},
       {:tiapi, path: "../tiapi", only: [:dev, :test]},
     ]

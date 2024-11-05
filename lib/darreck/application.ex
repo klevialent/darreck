@@ -16,6 +16,7 @@ defmodule Darreck.Application do
       {Finch, name: Darreck.Finch},
       Tiapi.Channel,
       DarreckTgBot.Supervisor,
+      Darreck.Scheduler,
       # Start to serve requests, typically the last entry
       DarreckWeb.Endpoint
     ]
