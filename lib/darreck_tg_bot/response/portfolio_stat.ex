@@ -1,6 +1,6 @@
 defmodule DarreckTgBot.Response.PortfolioStat do
 
-  @spec response(%DarreckTiapi.Stat{}) :: String.t()
+  @spec response(DarreckTiapi.PortfolioStat.t()) :: String.t()
   def response(stat) do
 
 "<code>

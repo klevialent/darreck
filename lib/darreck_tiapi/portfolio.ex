@@ -1,4 +1,4 @@
-defmodule DarreckTiapi.Stat do
+defmodule DarreckTiapi.PortfolioStat do
   alias Tiapi.Proto.Quotation
 
   defstruct [
@@ -22,7 +22,7 @@ defmodule DarreckTiapi.Stat do
 end
 
 defmodule DarreckTiapi.Portfolio do
-  alias DarreckTiapi.Stat
+  alias DarreckTiapi.PortfolioStat
   alias Tiapi.QuotationMath
   import Tiapi.QuotationMath
   require Logger
@@ -82,11 +82,11 @@ defmodule DarreckTiapi.Portfolio do
     "d8d006b6-fd44-4729-930a-3bc7050096bf",   # "SVZ4", "SILV-12.24 Серебро"}
   ]
 
-  @spec stat() :: Stat.t()
-  def stat when true do
+  @spec stat() :: PortfolioStat.t()
+  def stat() when true do
     portfolio = Tiapi.Service.get_portfolio!()
 
-        stat = Enum.reduce(portfolio.positions, %Stat{},
+    stat = Enum.reduce(portfolio.positions, %PortfolioStat{},
 
       fn (%{instrument_uid: uid}, acc) when uid in @blocked ->
         acc
@@ -128,7 +128,7 @@ defmodule DarreckTiapi.Portfolio do
       end
     )
 
-    %{stat |
+    %PortfolioStat{stat |
       all: sum([stat.long_shares, stat.cash, stat.bonds, stat.var_margin]) |> sub(stat.short_shares) |> to_float(),
       cash_without_guarantee: sub(stat.cash, stat.guarantee) |> to_float(),
       cash_rub: to_float(stat.cash_rub),
