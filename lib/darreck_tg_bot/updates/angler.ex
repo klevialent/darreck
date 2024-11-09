@@ -6,7 +6,7 @@ defmodule DarreckTgBot.Updates.Angler do
     {:ok, user} = Telegex.Instance.fetch_me()
     # read some parameters from your env config
     env_config = Application.get_env(:darreck, __MODULE__)
-    secret_token = "dev-secret-token"
+    secret_token = env_config[:token]
     # delete the webhook and set it again
     Telegex.delete_webhook()
     # set the webhook (url and secret token)

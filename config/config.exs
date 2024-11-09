@@ -63,6 +63,9 @@ config :phoenix, :json_library, Jason
 
 config :telegex, caller_adapter: {Finch, [receive_timeout: 5 * 1000]}
 
+config :main_proxy,
+  http: [port: 4000]
+
 import_config("sсheduler.exs")
 
 # Import environment specific config. This must remain at the bottom

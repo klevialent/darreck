@@ -2,11 +2,15 @@ defmodule Darreck.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+  require Logger
 
   use Application
 
   @impl true
   def start(_type, _args) do
+
+    Logger.info("\n\n-------------------------- !!! START APPLICATION !!! -------------------------\n\n")
+
     children = [
       DarreckWeb.Telemetry,
       Darreck.Repo,
@@ -18,7 +22,8 @@ defmodule Darreck.Application do
       DarreckTgBot.Supervisor,
       Darreck.Scheduler,
       # Start to serve requests, typically the last entry
-      DarreckWeb.Endpoint
+      DarreckWeb.Endpoint,
+      Darreck.Proxy,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

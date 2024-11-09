@@ -7,14 +7,7 @@ defmodule DarreckTgBot.Supervisor do
 
   @impl true
   def init(_arg) do
-    updates_handler =
-      if Application.get_env(:darreck, :tg_bot_work_mode, :webhook) == :webhook do
-        DarreckTgBot.Updates.Angler
-      else
-        DarreckTgBot.Updates.Poller
-      end
-
-      Supervisor.init([updates_handler], [strategy: :one_for_one])
+      Supervisor.init([DarreckTgBot.get_updates_handler()], [strategy: :one_for_one])
   end
 
 end

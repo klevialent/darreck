@@ -31,7 +31,7 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :darreck, Darreck.Repo,
-    # ssl: true,
+    ssl: true,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
@@ -49,7 +49,6 @@ if config_env() == :prod do
       """
 
   host = System.get_env("PHX_HOST") || "example.com"
-  port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :darreck, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
@@ -61,7 +60,7 @@ if config_env() == :prod do
       # See the documentation on https://hexdocs.pm/bandit/Bandit.html#t:options/0
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
-      port: port
+      port: 4002
     ],
     secret_key_base: secret_key_base
 
@@ -114,4 +113,22 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+
+  config :telegex,
+    token: System.fetch_env!("TG_BOT_TOKEN")
+
+  config :darreck, DarreckTgBot.Updates.Angler,
+    server_port: 4004,
+    webhook_url: System.fetch_env!("TG_HOOK_URL"),
+    token: System.fetch_env!("TG_HOOK_TOKEN")
+
+  config :darreck,
+    tg_chat_id: System.fetch_env!("TG_CHAT")
+
+  config :tiapi,
+    api_url: "https://invest-public-api.tinkoff.ru:443",
+    token: System.fetch_env!("TIAPI_TOKEN"),
+    account_id: System.fetch_env!("TIAPI_ACCOUNT")
+
 end

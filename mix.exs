@@ -60,12 +60,17 @@ defmodule Darreck.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:telegex, "~> 1.9-rc.0"},
+      {:multipart, "~> 0.4.0"},
       {:number, "~> 1.0.1"},
       {:quantum, "~> 3.5"},
+      {:main_proxy, github: "klevialent/main_proxy"},
       {:recompile_dep, "~> 0.1.0", only: :dev},
-      {:tiapi, path: "../tiapi", only: [:dev, :test]},
+      {:tiapi, opts_for_tiapi_dep(Mix.env)},
     ]
   end
+
+  defp opts_for_tiapi_dep(env) when env in [:dev, :test], do: [path: "../tiapi"]
+  defp opts_for_tiapi_dep(_), do: [github: "klevialent/tiapi"]
 
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to install project dependencies and perform other setup tasks, run:
