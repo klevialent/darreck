@@ -5,9 +5,10 @@ defmodule DarreckTiapi.PortfolioStat do
     all: %Quotation{},
     cash_without_guarantee: %Quotation{},
     cash: %Quotation{},
-    cash_rub: %Quotation{},
-    cash_rub_without_guarantee: %Quotation{},
     guarantee:  %Quotation{},
+    rub: %Quotation{},
+    lqdt: %Quotation{},
+    tpay: %Quotation{},
     bonds: %Quotation{},
     var_margin: %Quotation{},
     long_shares: %Quotation{},
@@ -69,12 +70,9 @@ defmodule DarreckTiapi.Portfolio do
     "a22a1263-8e1b-4546-a1aa-416463f104d3",   # "USD000UTSTOM", "Доллар США"},
   ]
 
-  @rub_uid "a92e2e25-a698-45cc-a781-167cf465257c"    #"RUB000UTSTOM", "Российский рубль"}
-
-  @cash_instruments [
-    "1d0e01e5-148c-40e5-bb8f-1bf2d8e03c1a",   # "TPAY", "Пассивный доход"}
-    "ade12bc5-07d9-44fe-b27a-1543e05bacfd",   # "LQDT", "ВИМ - Ликвидность"}
-  ]
+  @rub_uid  "a92e2e25-a698-45cc-a781-167cf465257c"    #"RUB000UTSTOM", "Российский рубль"}
+  @lqdt_uid "ade12bc5-07d9-44fe-b27a-1543e05bacfd"    # "LQDT", "ВИМ - Ликвидность"}
+  @tpay_uid "1d0e01e5-148c-40e5-bb8f-1bf2d8e03c1a"    # "TPAY", "Пассивный доход"}
 
   @pinned_futures [
     "b347fe28-0d2a-45bf-b3bd-cda8a6ac64e6",   # "GLDRUBF", "GLDRUBF Золото (rub)"},
@@ -83,7 +81,7 @@ defmodule DarreckTiapi.Portfolio do
   ]
 
   @spec stat() :: PortfolioStat.t()
-  def stat() when true do
+  def stat() do
     portfolio = Tiapi.Service.get_portfolio!()
 
     stat = Enum.reduce(portfolio.positions, %PortfolioStat{},
@@ -92,12 +90,16 @@ defmodule DarreckTiapi.Portfolio do
         acc
 
       (%{instrument_uid: @rub_uid} = position, acc) ->
-        acc
-        |> add(:cash, calc_position_price(position))
-        |> add(:cash_rub, calc_position_price(position))
+        add(acc, :rub, calc_position_price(position))
 
-      (%{instrument_uid: uid} = position, acc) when uid in @cash_instruments->
-        add(acc, :cash, calc_position_price(position))
+      (%{instrument_uid: @lqdt_uid} = position, acc) ->
+        add(acc, :lqdt, calc_position_price(position))
+
+      (%{instrument_uid: @tpay_uid} = position, acc) ->
+        add(acc, :tpay, calc_position_price(position))
+
+      (%{instrument_type: "bond"} = position, acc) ->
+        add(acc, :bonds, sum(position.current_price, position.current_nkd) |> mult(position.quantity))
 
       (%{instrument_type: "share"} = position, acc) when position.quantity.units > 0 ->
         add(acc, :long_shares, calc_position_price(position))
@@ -117,9 +119,6 @@ defmodule DarreckTiapi.Portfolio do
       (%{instrument_type: "futures"} = position, acc) when position.quantity.units < 0 ->
         add_futures(acc, :short_futures, :dshort_min, position)
 
-      (%{instrument_type: "bond"} = position, acc) ->
-        add(acc, :bonds, sum(calc_position_price(position), mult(position.current_nkd, position.quantity)))
-
       (position, acc) ->
         instrument = Tiapi.Service.get_instrument_by_uid!(position.instrument_uid)
         Logger.error("Unknown position: #{instrument.name}, #{instrument.uid}, #{instrument.ticker}")
@@ -128,13 +127,16 @@ defmodule DarreckTiapi.Portfolio do
       end
     )
 
+    cash = sum([stat.rub, stat.lqdt, stat.tpay, stat.bonds, stat.var_margin])
+
     %PortfolioStat{stat |
-      all: sum([stat.long_shares, stat.cash, stat.bonds, stat.var_margin]) |> sub(stat.short_shares) |> to_float(),
-      cash_without_guarantee: sub(stat.cash, stat.guarantee) |> to_float(),
-      cash_rub: to_float(stat.cash_rub),
-      cash_rub_without_guarantee: sub(stat.cash_rub, stat.guarantee) |> to_float(),
-      cash: to_float(stat.cash),
+      all: sum(cash, stat.long_shares) |> sub(stat.short_shares) |> to_float(),
+      cash_without_guarantee: sub(cash, stat.guarantee) |> to_float(),
+      cash: to_float(cash),
       guarantee: to_float(stat.guarantee),
+      rub: to_float(stat.rub),
+      lqdt: to_float(stat.lqdt),
+      tpay: to_float(stat.tpay),
       bonds: to_float(stat.bonds),
       var_margin: to_float(stat.var_margin),
       long_shares: to_float(stat.long_shares),
@@ -157,16 +159,16 @@ defmodule DarreckTiapi.Portfolio do
     price = mult([quantity, position.current_price, point_price])
 
     stat
-    |> add(:guarantee, mult(Map.get(instrument, risk_rate_key), price))
+    |> add(:guarantee, Map.get(instrument, risk_rate_key) |> mult(price))
     |> add(:var_margin, position.var_margin)
     |> add(field, price)
   end
 
   defp calc_position_price(position) do
-    Tiapi.QuotationMath.abs(mult(position.current_price, position.quantity))
+    mult(position.current_price, position.quantity) |> Tiapi.QuotationMath.abs()
   end
 
   defp add(stat, stat_key, add) do
-    %{stat | stat_key => sum(Map.get(stat, stat_key), add)}
+    %{stat | stat_key => Map.get(stat, stat_key) |> sum(add)}
   end
 end

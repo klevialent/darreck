@@ -13,9 +13,10 @@ defmodule DarreckTgBot.Response.PortfolioStat do
 Кэш:
   Доступно: ....#{stat.cash_without_guarantee |> prettify_number}
   Всего: .......#{stat.cash |> prettify_number}
-  Рубли: .......#{stat.cash_rub |> prettify_number}
   ГО: ..........#{stat.guarantee |> prettify_number}
-  Рубли без ГО: #{stat.cash_rub_without_guarantee |> prettify_number}
+  Рубли: .......#{stat.rub |> prettify_number}
+  LQDT: ........#{stat.lqdt |> prettify_number}
+  TPAY: ........#{stat.tpay |> prettify_number}
   Бонды: .......#{stat.bonds |> prettify_number}
   Вариационка: .#{stat.var_margin |> prettify_number}
 
