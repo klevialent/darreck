@@ -1,10 +1,10 @@
 defmodule DarreckTgBot.Response.PortfolioStat do
 
-  @spec response(DarreckTiapi.PortfolioStat.t()) :: String.t()
-  def response(stat) do
+  @spec do_response(DarreckTiapi.PortfolioStat.t()) :: String.t()
+  def do_response(stat) do
 
 "<code>
-Стоимость: .....#{stat.all |> prettify_number}
+Стоимость: .....#{stat.worth |> prettify_number}
 
 Баланс:
   Лонг: ........#{stat.long_all |> prettify_number}

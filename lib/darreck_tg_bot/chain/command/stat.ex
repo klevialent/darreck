@@ -9,7 +9,7 @@ defmodule DarreckTgBot.Chain.Command.Stat do
       | payload: %{
           method: "sendMessage",
           chat_id: chat.id,
-          text: DarreckTiapi.Portfolio.stat() |> DarreckTgBot.Response.PortfolioStat.response(),
+          text: DarreckTiapi.Portfolio.stat() |> DarreckTgBot.Response.PortfolioStat.do_response(),
           parse_mode: "html",
         }
     }

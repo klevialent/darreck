@@ -2,7 +2,7 @@ defmodule DarreckTiapi.PortfolioStat do
   alias Tiapi.Proto.Quotation
 
   defstruct [
-    all: %Quotation{},
+    worth: %Quotation{},
     cash_without_guarantee: %Quotation{},
     cash: %Quotation{},
     guarantee:  %Quotation{},
@@ -130,7 +130,7 @@ defmodule DarreckTiapi.Portfolio do
     cash = sum([stat.rub, stat.lqdt, stat.tpay, stat.bonds, stat.var_margin])
 
     %PortfolioStat{stat |
-      all: sum(cash, stat.long_shares) |> sub(stat.short_shares) |> to_float(),
+      worth: sum(cash, stat.long_shares) |> sub(stat.short_shares) |> to_float(),
       cash_without_guarantee: sub(cash, stat.guarantee) |> to_float(),
       cash: to_float(cash),
       guarantee: to_float(stat.guarantee),
