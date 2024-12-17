@@ -2,6 +2,7 @@ defmodule DarreckSchedule.VarMargin do
   alias Darreck.Repo
   alias DarreckTiapi.VarMarginCalculator
   alias Darreck.Schema.VarMargin, as: VarMarginEntity
+  import Ecto.Query, only: [from: 2]
 
   @silver_uid "d8d006b6-fd44-4729-930a-3bc7050096bf"
 
@@ -23,13 +24,15 @@ defmodule DarreckSchedule.VarMargin do
     now = DateTime.utc_now()
     var_margin_value = VarMarginCalculator.sum_var_margin(@silver_uid, DateTime.add(now, -1, :hour), now)
 
-    {:ok, var_margin} = VarMarginEntity
-    |> Ecto.Query.last(:inserted_at)
-    |> Repo.one()
+    [actual, prev] = Repo.all(from e in VarMarginEntity, order_by: [desc: e.inserted_at], limit: 2)
+
+    actual
     |> VarMarginEntity.changeset(%{var_margin: var_margin_value})
     |> Repo.update()
 
-    Telegex.send_message(DarreckTgBot.chat_id, "#{var_margin.position_cost}    #{var_margin_value}")
+    diff = Float.round(actual.position_cost - prev.position_cost, 2)
+
+    Telegex.send_message(DarreckTgBot.chat_id, "#{actual.position_cost}    #{diff}    #{var_margin_value}")
 
     :ok
   end
