@@ -4,7 +4,7 @@ defmodule DarreckSchedule.VarMargin do
   alias Darreck.Schema.VarMargin, as: VarMarginEntity
   import Ecto.Query, only: [from: 2]
 
-  @silver_uid "d8d006b6-fd44-4729-930a-3bc7050096bf"
+  @silver_uid "7c06813e-a9bb-4fe1-a135-fb32da0fba05"
 
   @spec set_position_cost() :: :ok
   def set_position_cost() do
