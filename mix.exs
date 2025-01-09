@@ -63,6 +63,7 @@ defmodule Darreck.MixProject do
       {:multipart, "~> 0.4.0"},
       {:number, "~> 1.0.1"},
       {:quantum, "~> 3.5"},
+      {:gen_stage, "~> 1.2"},
       {:main_proxy, github: "klevialent/main_proxy"},
       {:recompile_dep, "~> 0.1.0", only: :dev},
       {:tiapi, opts_for_tiapi_dep(Mix.env)},
