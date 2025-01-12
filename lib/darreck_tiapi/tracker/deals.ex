@@ -12,8 +12,16 @@ defmodule DarreckTiapi.Tracker.Deals do
     Logger.info("Start deals tracking")
 
     Tiapi.Stream.trades!(180_000)
-    |> Stream.each(fn {:ok, %{payload: payload}} -> log_result(payload) end)
+    |> Stream.each(&process/1)
     |> Stream.run()
+  end
+
+  def process({:ok, %{payload: payload}}) do
+    log_result(payload)
+  end
+
+  def process(error) do
+    Logger.error("Error deals tracking #{inspect(error)}")
   end
 
   @spec log_result(
@@ -25,7 +33,7 @@ defmodule DarreckTiapi.Tracker.Deals do
     trades = for trade <- deal.trades do
       {date_string(trade.date_time), trade.quantity, to_float(trade.price)}
     end
-    
+
     Logger.info("Deal #{inspect({deal.figi, date_string(deal.created_at), deal.direction, trades})}")
   end
 
@@ -34,7 +42,11 @@ defmodule DarreckTiapi.Tracker.Deals do
   end
 
   def log_result({:subscription, subscription}) do
-    Logger.info("Ping #{inspect(subscription)}")
+    Logger.warning("Subscription #{inspect(subscription)}")
+  end
+
+  def log_result(unknown) do
+    Logger.error("Unknown deals tracking #{inspect(unknown)}")
   end
 
   defp date_string(protobuf_timestamp) do
