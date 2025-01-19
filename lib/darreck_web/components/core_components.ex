@@ -15,9 +15,9 @@ defmodule DarreckWeb.CoreComponents do
   Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
   use Phoenix.Component
+  use Gettext, backend: DarreckWeb.Gettext
 
   alias Phoenix.LiveView.JS
-  import DarreckWeb.Gettext
 
   @doc """
   Renders a modal.
