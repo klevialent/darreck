@@ -5,21 +5,50 @@ defmodule DarreckTiapi.Tracker.Deals do
   import DarreckTiapi.Service.DealService
   require Logger
 
+  @ping_timeout 180_000
+
   @spec start_link() :: {:ok, pid()}
   def start_link() do
-    {:ok, spawn(&track/0)}
+    {:ok, spawn(&run/0)}
   end
 
-  @spec track() :: :ok
-  def track() do
+  @spec run() :: no_return()
+  def run() do
+    parent = self()
+    {pid, ref} = spawn_monitor(fn -> track(parent) end)
+    listen(pid, ref)
+  end
+
+  defp listen(pid, ref) do
+    receive do
+      {:DOWN, ^ref, :process, ^pid, reason} ->
+        Logger.error("Error deals tracking: #{reason}")
+        run()
+      {:i_am_alive, ^pid} ->
+        listen(pid, ref)
+    after @ping_timeout + 3000 ->
+      Logger.warning("Restart deals tracking")
+      Process.exit(pid, :restart)
+      run()
+    end
+  end
+
+  @spec track(pid()) :: :ok
+  def track(parent_pid) do
     Logger.info("Start deals tracking")
 
-    Tiapi.Stream.trades!(180_000)
-    |> Stream.each(&process_response/1)
+    Tiapi.Stream.trades!(@ping_timeout)
+    |> Stream.each(
+      fn response ->
+        send(parent_pid, {:i_am_alive, self()})
+        process_response(response)
+      end)
     |> Stream.run()
   end
 
-  defp process_response({:ok, %{payload: payload}}), do: process_payload(payload)
+  defp process_response({:ok, %{payload: payload}}) do
+    process_payload(payload)
+  end
   defp process_response(error) do
     Logger.error("Error deals tracking response #{inspect(error)}")
   end
@@ -27,7 +56,7 @@ defmodule DarreckTiapi.Tracker.Deals do
   @spec process_payload({:order_trades, OrderTrades.t()}) :: :ok
   defp process_payload({:order_trades, %OrderTrades{} = order_trades} = payload) do
     log_result(payload)
-    prepare(order_trades) |> save()
+    # prepare(order_trades) |> save()
   end
 
   defp process_payload(payload), do: log_result(payload)
