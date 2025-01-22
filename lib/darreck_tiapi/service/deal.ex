@@ -20,11 +20,7 @@ defmodule DarreckTiapi.Service.DealService do
   def save(deals) do
     Repo.transaction(fn ->
       for deal <- deals do
-        Repo.insert(deal,
-          on_conflict: [set: [updated_at: DateTime.utc_now()]],
-          replace_all_except: [:inserted_at],
-          conflict_target: :id
-        )
+        deal |> Repo.insert_or_update()
       end
     end)
   end
@@ -48,9 +44,9 @@ defmodule DarreckTiapi.Service.DealService do
         quantity: quantity,
         price: price,
         instrument_id: instrument.id,
-      }
+      } |> Deal.changeset
     else
-      %{deal | quantity: deal.quantity + quantity}
+      Deal.changeset(deal, %{quantity: deal.quantity + quantity})
     end
   end
 
