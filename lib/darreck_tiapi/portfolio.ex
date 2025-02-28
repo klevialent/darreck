@@ -79,7 +79,10 @@ defmodule DarreckTiapi.Portfolio do
     "c300543d-aa18-4249-b110-615409dde036",   # "CNYRUBF", "CNYRUBF Юань - Рубль"},
     "d8d006b6-fd44-4729-930a-3bc7050096bf",   # "SVZ4", "SILV-12.24 Серебро"}
     "7c06813e-a9bb-4fe1-a135-fb32da0fba05",
+    "890390e9-c8ac-4a90-ad36-f328ea60fd6d",
     "48706c30-0bd7-42ad-a936-150287cd9de4",   # USDRUBF
+    "8f99f804-abc1-4339-8c51-521c3e78cd13",
+    "52a78271-73f1-4b83-a6e8-e06cb01eea64",
   ]
 
   @spec stat() :: PortfolioStat.t()
