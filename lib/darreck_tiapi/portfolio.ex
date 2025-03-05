@@ -8,6 +8,7 @@ defmodule DarreckTiapi.PortfolioStat do
     guarantee:  %Quotation{},
     rub: %Quotation{},
     lqdt: %Quotation{},
+    tmon: %Quotation{},
     tpay: %Quotation{},
     bonds: %Quotation{},
     var_margin: %Quotation{},
@@ -72,6 +73,7 @@ defmodule DarreckTiapi.Portfolio do
 
   @rub_uid  "a92e2e25-a698-45cc-a781-167cf465257c"    #"RUB000UTSTOM", "Российский рубль"}
   @lqdt_uid "ade12bc5-07d9-44fe-b27a-1543e05bacfd"    # "LQDT", "ВИМ - Ликвидность"}
+  @tmon_uid "498ec3ff-ef27-4729-9703-a5aac48d5789"    # "TMON@", "Денежный рынок"}
   @tpay_uid "1d0e01e5-148c-40e5-bb8f-1bf2d8e03c1a"    # "TPAY", "Пассивный доход"}
 
   @pinned_futures [
@@ -99,6 +101,9 @@ defmodule DarreckTiapi.Portfolio do
 
       (%{instrument_uid: @lqdt_uid} = position, acc) ->
         add(acc, :lqdt, calc_position_price(position))
+
+      (%{instrument_uid: @tmon_uid} = position, acc) ->
+          add(acc, :tmon, calc_position_price(position))
 
       (%{instrument_uid: @tpay_uid} = position, acc) ->
         add(acc, :tpay, calc_position_price(position))
@@ -132,7 +137,7 @@ defmodule DarreckTiapi.Portfolio do
       end
     )
 
-    cash = sum([stat.rub, stat.lqdt, stat.tpay, stat.bonds, stat.var_margin])
+    cash = sum([stat.rub, stat.lqdt, stat.tmon, stat.tpay, stat.bonds, stat.var_margin])
 
     %PortfolioStat{stat |
       worth: sum(cash, stat.long_shares) |> sub(stat.short_shares) |> to_float(),
@@ -141,6 +146,7 @@ defmodule DarreckTiapi.Portfolio do
       guarantee: to_float(stat.guarantee),
       rub: to_float(stat.rub),
       lqdt: to_float(stat.lqdt),
+      tmon: to_float(stat.tmon),
       tpay: to_float(stat.tpay),
       bonds: to_float(stat.bonds),
       var_margin: to_float(stat.var_margin),

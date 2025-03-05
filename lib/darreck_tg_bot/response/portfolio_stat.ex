@@ -16,6 +16,7 @@ defmodule DarreckTgBot.Response.PortfolioStat do
   ГО: ..........#{stat.guarantee |> prettify_number}
   Рубли: .......#{stat.rub |> prettify_number}
   LQDT: ........#{stat.lqdt |> prettify_number}
+  TMON: ........#{stat.tmon |> prettify_number}
   TPAY: ........#{stat.tpay |> prettify_number}
   Бонды: .......#{stat.bonds |> prettify_number}
   Вариационка: .#{stat.var_margin |> prettify_number}
