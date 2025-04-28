@@ -82,9 +82,20 @@ defmodule DarreckTiapi.Portfolio do
     "d8d006b6-fd44-4729-930a-3bc7050096bf",   # "SVZ4", "SILV-12.24 Серебро"}
     "7c06813e-a9bb-4fe1-a135-fb32da0fba05",
     "890390e9-c8ac-4a90-ad36-f328ea60fd6d",
+    "483e017a-820f-4e6a-8b82-67fc736588e7",
+    "51dc6277-6409-4cde-a1af-9c3b3b15f6f8",
+    "bbd36bc7-168b-4a7e-865f-f2e9bde93a56",
+
     "48706c30-0bd7-42ad-a936-150287cd9de4",   # USDRUBF
     "8f99f804-abc1-4339-8c51-521c3e78cd13",
     "52a78271-73f1-4b83-a6e8-e06cb01eea64",
+    "06aacf7e-cd14-49ee-9cde-7615231d0675",
+    "9c8c4329-c5a3-4df9-a95e-561ccbb41082",
+    "7d452ecf-6868-42b4-bded-5d0f8577eed1",
+    "b4df2961-035a-4dcd-8372-9af0db10d2c9",
+    "574d37d8-9de4-423a-9e33-b936002d8bda",
+    "2dd5eb6b-7a52-4186-a0ec-9f7f6ed6fbd7",
+    "76d6a73e-c555-4de6-a66d-be99d96ed449",
   ]
 
   @spec stat() :: PortfolioStat.t()
