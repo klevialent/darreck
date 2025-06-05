@@ -78,7 +78,18 @@ defmodule DarreckTiapi.Portfolio do
 
   @pinned_futures [
     "b347fe28-0d2a-45bf-b3bd-cda8a6ac64e6",   # "GLDRUBF", "GLDRUBF Золото (rub)"},
+    "f571c2f9-e527-4581-80c2-35a64da61fd7",
+    "24597b13-d0ce-4b0c-989c-d384564b5465",
+    "d27431df-7e77-4a7a-9a5a-fbf21688464d",
+    
     "c300543d-aa18-4249-b110-615409dde036",   # "CNYRUBF", "CNYRUBF Юань - Рубль"},
+    "318e315a-2a87-458c-b0a3-2f61535ef0b3",
+    "bf2b795a-5db9-4f79-b942-71ab26ad06ef",
+    "8c43e020-dc97-48da-8088-1e1a52972195",
+    "c908b853-eef2-4bb7-8dd9-69341d3a6f46",
+    "9dc067df-de3c-4d90-a45a-c3ed939af998",
+    "81f07a5c-99af-4b3a-a939-067e2ed3dd7a",
+
     "d8d006b6-fd44-4729-930a-3bc7050096bf",   # "SVZ4", "SILV-12.24 Серебро"}
     "7c06813e-a9bb-4fe1-a135-fb32da0fba05",
     "890390e9-c8ac-4a90-ad36-f328ea60fd6d",
