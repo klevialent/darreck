@@ -81,7 +81,7 @@ defmodule DarreckTiapi.Portfolio do
     "f571c2f9-e527-4581-80c2-35a64da61fd7",
     "24597b13-d0ce-4b0c-989c-d384564b5465",
     "d27431df-7e77-4a7a-9a5a-fbf21688464d",
-    
+
     "c300543d-aa18-4249-b110-615409dde036",   # "CNYRUBF", "CNYRUBF Юань - Рубль"},
     "318e315a-2a87-458c-b0a3-2f61535ef0b3",
     "bf2b795a-5db9-4f79-b942-71ab26ad06ef",
@@ -119,16 +119,16 @@ defmodule DarreckTiapi.Portfolio do
         acc
 
       (%{instrument_uid: @rub_uid} = position, acc) ->
-        add(acc, :rub, calc_position_price(position))
+        add(acc, :rub, mult(position.current_price, position.quantity))
 
       (%{instrument_uid: @lqdt_uid} = position, acc) ->
-        add(acc, :lqdt, calc_position_price(position))
+        add(acc, :lqdt, mult(position.current_price, position.quantity))
 
       (%{instrument_uid: @tmon_uid} = position, acc) ->
-          add(acc, :tmon, calc_position_price(position))
+          add(acc, :tmon, mult(position.current_price, position.quantity))
 
       (%{instrument_uid: @tpay_uid} = position, acc) ->
-        add(acc, :tpay, calc_position_price(position))
+        add(acc, :tpay, mult(position.current_price, position.quantity))
 
       (%{instrument_type: "bond"} = position, acc) ->
         add(acc, :bonds, sum(position.current_price, position.current_nkd) |> mult(position.quantity))
