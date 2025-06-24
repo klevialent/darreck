@@ -152,8 +152,9 @@ defmodule DarreckTiapi.Portfolio do
         add_futures(acc, :short_futures, :dshort_min, position)
 
       (position, acc) ->
-        instrument = Tiapi.Service.get_instrument_by_uid!(position.instrument_uid)
-        Logger.error("Unknown position: #{instrument.name}, #{instrument.uid}, #{instrument.ticker}")
+        Logger.error("Unknown position: #{inspect(position)}")
+        # instrument = Tiapi.Service.get_instrument_by_uid!(position.instrument_uid)
+        # Logger.error("Unknown position: #{instrument.name}, #{instrument.uid}, #{instrument.ticker}")
         acc
 
       end
